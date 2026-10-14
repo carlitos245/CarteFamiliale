@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Carte Familiale</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f2f4f8;
+}
+
+header{
+    background:#1976d2;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1,h2{
+    margin-top:0;
+}
+
+.code{
+    font-size:28px;
+    color:#1976d2;
+    font-weight:bold;
+    text-align:center;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#1976d2;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1565c0;
+}
+
+.success{
+    color:green;
+    font-weight:bold;
+}
+
+.error{
+    color:red;
+    font-weight:bold;
+}
+
+.info{
+    background:#e8f4ff;
+    border-radius:10px;
+    padding:15px;
+    margin-top:15px;
+}
+
+#gpsResult{
+    margin-top:20px;
+}
+
+footer{
+    text-align:center;
+    color:#666;
+    padding:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>📍 Carte Familiale</h1>
+
+<p>Rejoindre une famille et partager sa position GPS</p>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Famille</h2>
+
+<div id="familyCode" class="code">
+
+FAM-395341
+
+</div>
+
+<p style="text-align:center;">
+
+Scannez le QR Code puis cliquez sur :
+
+<b>Partager ma position</b>
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Participation</h2>
+
+<button onclick="demanderPosition()">
+
+📍 Partager ma position
+
+</button>
+
+<div id="gpsResult"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Comment cela fonctionne ?</h2>
+
+<div class="info">
+
+1. Scanner le QR Code<br>
+2. Autoriser la localisation GPS<br>
+3. Envoyer sa position à la famille<br>
+4. Apparaitre sur la carte familiale
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+
+Carte Familiale - Prototype GitHub Pages
+
+</footer>
+
+<script>
+
+function demanderPosition(){
+
+    const resultat =
+        document.getElementById(
+            "gpsResult"
+        );
+
+    if(!navigator.geolocation){
+
+        resultat.innerHTML = `
+        <p class="error">
+        GPS non disponible.
+        </p>
+        `;
+
+        return;
+    }
+
+    resultat.innerHTML = `
+    <p>
+    Recherche de votre position...
+    </p>
+    `;
+
+    navigator.geolocation.getCurrentPosition(
+
+        afficherPosition,
+
+        erreurPosition,
+
+        {
+            enableHighAccuracy:true,
+            timeout:10000,
+            maximumAge:0
+        }
+
+    );
+}
+
+function afficherPosition(position){
+
+    let latitude =
+        position.coords.latitude;
+
+    let longitude =
+        position.coords.longitude;
+
+    let precision =
+        position.coords.accuracy;
+
+    document.getElementById(
+        "gpsResult"
+    ).innerHTML = `
+
+    <p class="success">
+    ✅ Position récupérée
+    </p>
+
+    <div class="info">
+
+    <b>Latitude :</b>
+    ${latitude}
+    <br><br>
+
+    <b>Longitude :</b>
+    ${longitude}
+    <br><br>
+
+    <b>Précision :</b>
+    ${Math.round(precision)} mètres
+
+    </div>
+
+    <p>
+
+    Cette position est prête à être envoyée
+    vers Render dans la prochaine version.
+
+    </p>
+
+    `;
+}
+
+function erreurPosition(erreur){
+
+    let message =
+        "Erreur GPS";
+
+    switch(erreur.code){
+
+        case 1:
+            message =
+            "Autorisation refusée";
+            break;
+
+        case 2:
+            message =
+            "Position indisponible";
+            break;
+
+        case 3:
+            message =
+            "Temps dépassé";
+            break;
+    }
+
+    document.getElementById(
+        "gpsResult"
+    ).innerHTML = `
+
+    <p class="error">
+    ❌ $
