@@ -85,9 +85,30 @@ button:hover{
 
 <div class="container">
 
+<input
+type="text"
+id="nomMembre"
+placeholder="Votre prénom"
+style="
+width:100%;
+padding:15px;
+margin-bottom:10px;
+font-size:18px;
+border-radius:10px;
+border:1px solid #ccc;
+">
+
 <button onclick="demanderPosition()">
 📍 Partager ma position
 </button>
+
+<div id="gpsResult" class="card">
+
+Position non envoyée
+
+</div>
+
+</div>
 
 <div id="gpsResult" class="card">
 
@@ -116,26 +137,29 @@ let monMarqueur = null;
 
 async function demanderPosition(){
 
+    const nom =
+        document.getElementById(
+            "nomMembre"
+        ).value.trim();
+
+    if(nom === ""){
+
+        document.getElementById(
+            "gpsResult"
+        ).innerHTML =
+
+        `<span class="error">
+        Veuillez saisir votre prénom
+        </span>`;
+
+        return;
+    }
+
     const resultat =
         document.getElementById('gpsResult');
 
     resultat.innerHTML =
         "Recherche GPS...";
-
-    navigator.geolocation.getCurrentPosition(
-
-        afficherPosition,
-
-        erreurPosition,
-
-        {
-            enableHighAccuracy:true,
-            timeout:10000,
-            maximumAge:0
-        }
-
-    );
-}
 
 async function afficherPosition(position){
 
