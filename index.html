@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Carte Familiale</title>
 
-<style>
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
-*{
-    box-sizing:border-box;
-}
+<style>
 
 body{
     margin:0;
@@ -22,44 +22,39 @@ body{
 header{
     background:#1976d2;
     color:white;
-    padding:20px;
     text-align:center;
+    padding:15px;
+}
+
+#map{
+    height:500px;
+    width:100%;
 }
 
 .container{
-    max-width:700px;
-    margin:auto;
     padding:20px;
-}
-
-.card{
-    background:white;
-    border-radius:15px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
-
-.code{
-    font-size:28px;
-    color:#1976d2;
-    font-weight:bold;
-    text-align:center;
 }
 
 button{
     width:100%;
     padding:15px;
-    border:none;
-    border-radius:10px;
+    font-size:18px;
     background:#1976d2;
     color:white;
-    font-size:18px;
+    border:none;
+    border-radius:10px;
     cursor:pointer;
 }
 
 button:hover{
     background:#1565c0;
+}
+
+.card{
+    background:white;
+    margin-top:15px;
+    padding:15px;
+    border-radius:10px;
 }
 
 .success{
@@ -72,23 +67,6 @@ button:hover{
     font-weight:bold;
 }
 
-.info{
-    background:#e8f4ff;
-    border-radius:10px;
-    padding:15px;
-    margin-top:15px;
-}
-
-#gpsResult{
-    margin-top:20px;
-}
-
-footer{
-    text-align:center;
-    color:#666;
-    padding:20px;
-}
-
 </style>
 
 </head>
@@ -99,90 +77,63 @@ footer{
 
 <h1>📍 Carte Familiale</h1>
 
-<p>Rejoindre une famille et partager sa position GPS</p>
+<p>Famille : FAM-395341</p>
 
 </header>
 
+<div id="map"></div>
+
 <div class="container">
-
-<div class="card">
-
-<h2>Famille</h2>
-
-<div id="familyCode" class="code">
-FAM-395341
-</div>
-
-<p style="text-align:center;">
-Scannez le QR Code puis cliquez sur
-<b>Partager ma position</b>
-</p>
-
-</div>
-
-<div class="card">
-
-<h2>Participation</h2>
 
 <button onclick="demanderPosition()">
 📍 Partager ma position
 </button>
 
-<div id="gpsResult"></div>
+<div id="gpsResult" class="card">
 
-</div>
-
-<div class="card">
-
-<h2>Comment cela fonctionne ?</h2>
-
-<div class="info">
-1. Scanner le QR Code<br>
-2. Autoriser la localisation GPS<br>
-3. Envoyer sa position à la famille<br>
-4. Apparaitre sur la carte familiale
-</div>
+Position non envoyée
 
 </div>
 
 </div>
 
-<footer>
-Carte Familiale - Prototype GitHub Pages
-</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
-function demanderPosition(){
+const map = L.map('map').setView(
+    [48.8566,2.3522],
+    12
+);
+
+L.tileLayer(
+'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+ maxZoom:19
+}).addTo(map);
+
+let monMarqueur = null;
+
+async function demanderPosition(){
 
     const resultat =
-        document.getElementById("gpsResult");
+        document.getElementById('gpsResult');
 
-    if(!navigator.geolocation){
-
-        resultat.innerHTML = `
-        <p class="error">
-        GPS non disponible.
-        </p>
-        `;
-
-        return;
-    }
-
-    resultat.innerHTML = `
-    <p>
-    Recherche de votre position...
-    </p>
-    `;
+    resultat.innerHTML =
+        "Recherche GPS...";
 
     navigator.geolocation.getCurrentPosition(
+
         afficherPosition,
+
         erreurPosition,
+
         {
             enableHighAccuracy:true,
             timeout:10000,
             maximumAge:0
         }
+
     );
 }
 
@@ -194,118 +145,117 @@ async function afficherPosition(position){
     let longitude =
         position.coords.longitude;
 
-    let precision =
-        position.coords.accuracy;
+    if(monMarqueur){
+        map.removeLayer(monMarqueur);
+    }
+
+    monMarqueur =
+        L.marker([
+            latitude,
+            longitude
+        ]).addTo(map);
+
+    monMarqueur.bindPopup(
+        "📱 Mon iPhone"
+    );
+
+    map.setView(
+        [latitude,longitude],
+        16
+    );
 
     try{
 
-        const response =
-            await fetch(
-                "https://cartefamiliale-api.onrender.com/position",
-                {
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify({
-                        famille:"FAM-395341",
-                        nom:"iPhone",
-                        latitude:latitude,
-                        longitude:longitude,
-                        precision:precision,
-                        date:new Date().toISOString()
-                    })
-                }
-            );
-
-        await response.json();
+        await fetch(
+            "https://cartefamiliale-api.onrender.com/position",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    famille:"FAM-395341",
+                    nom:"iPhone",
+                    latitude:latitude,
+                    longitude:longitude,
+                    date:new Date().toISOString()
+                })
+            }
+        );
 
         document.getElementById(
             "gpsResult"
-        ).innerHTML = `
+        ).innerHTML =
 
-        <p class="success">
+        `<span class="success">
         ✅ Position envoyée au serveur
-        </p>
-
-        <div class="info">
-
-        <b>Latitude :</b>
-        ${latitude}
-
-        <br><br>
-
-        <b>Longitude :</b>
-        ${longitude}
-
-        <br><br>
-
-        <b>Précision :</b>
-        ${Math.round(precision)} mètres
-
-        <br><br>
-
-        <b>Serveur :</b>
-        Connecté
-
-        </div>
-
-        `;
+        </span>`;
     }
     catch(e){
 
         document.getElementById(
             "gpsResult"
-        ).innerHTML = `
+        ).innerHTML =
 
-        <p class="error">
-        ❌ Erreur Render
-        </p>
-
-        <div class="info">
-        ${e}
-        </div>
-
-        `;
+        `<span class="error">
+        ❌ Erreur serveur
+        </span>`;
     }
 }
 
 function erreurPosition(erreur){
 
-    let message =
-        "Erreur GPS";
-
-    switch(erreur.code){
-
-        case 1:
-            message =
-            "Autorisation refusée";
-            break;
-
-        case 2:
-            message =
-            "Position indisponible";
-            break;
-
-        case 3:
-            message =
-            "Temps dépassé";
-            break;
-    }
-
     document.getElementById(
         "gpsResult"
-    ).innerHTML = `
+    ).innerHTML =
 
-    <p class="error">
-    ❌ ${message}
-    </p>
-
-    `;
+    `<span class="error">
+    ❌ Autorisation refusée ou GPS indisponible
+    </span>`;
 }
+
+async function chargerPositions(){
+
+    try{
+
+        const response =
+            await fetch(
+                "https://cartefamiliale-api.onrender.com/positions"
+            );
+
+        const data =
+            await response.json();
+
+        data.forEach(item=>{
+
+            if(
+                item.latitude &&
+                item.longitude
+            ){
+
+                L.marker([
+                    item.latitude,
+                    item.longitude
+                ])
+                .addTo(map)
+                .bindPopup(
+                    item.nom || "Membre"
+                );
+            }
+
+        });
+
+    }
+    catch(e){
+
+        console.log(e);
+
+    }
+}
+
+chargerPositions();
 
 </script>
 
 </body>
-
 </html>
