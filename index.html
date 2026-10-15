@@ -180,8 +180,11 @@ async function afficherPosition(position){
         ]).addTo(map);
 
     monMarqueur.bindPopup(
-        "📱 Mon iPhone"
-    );
+    "📍 " +
+    document.getElementById(
+        "nomMembre"
+    ).value
+);
 
     map.setView(
         [latitude,longitude],
@@ -199,9 +202,10 @@ async function afficherPosition(position){
                 },
                 body:JSON.stringify({
                     famille:"FAM-395341",
-                    nom:"iPhone",
+                    nom:document.getElementById(
+                    "nomMembre"
+                     ).value,
                     latitude:latitude,
-                    longitude:longitude,
                     date:new Date().toISOString()
                 })
             }
