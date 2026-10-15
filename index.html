@@ -161,6 +161,21 @@ async function demanderPosition(){
     resultat.innerHTML =
         "Recherche GPS...";
 
+    navigator.geolocation.getCurrentPosition(
+
+        afficherPosition,
+
+        erreurPosition,
+
+        {
+            enableHighAccuracy:true,
+            timeout:10000,
+            maximumAge:0
+        }
+
+    );
+}
+
 async function afficherPosition(position){
 
     let latitude =
