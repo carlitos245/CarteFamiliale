@@ -383,7 +383,7 @@ chargerPositions();
     5000
 );
 
-    document
+document
 .getElementById("login-btn")
 .addEventListener(
 
@@ -414,12 +414,12 @@ chargerPositions();
             ).style.display = "none";
 
             document.getElementById(
-    "appPage"
-).style.display = "block";
+                "appPage"
+            ).style.display = "block";
 
-setTimeout(() => {
-    map.invalidateSize();
-}, 200);
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 200);
 
         }else{
 
@@ -433,25 +433,24 @@ setTimeout(() => {
     }
 
 );
-    document.getElementById(
-    "appPage"
-).style.display = "block";
 
-setTimeout(() => {
-    map.invalidateSize();
-}, 200);
+if(
+    sessionStorage.getItem(
+        "auth"
+    ) === "ok"
+){
 
     document.getElementById(
         "loginPage"
     ).style.display = "none";
 
     document.getElementById(
-    "appPage"
-).style.display = "block";
+        "appPage"
+    ).style.display = "block";
 
-setTimeout(() => {
-    map.invalidateSize();
-}, 200);
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 200);
 
 }
         </div>
