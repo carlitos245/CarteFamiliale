@@ -112,6 +112,7 @@ Position non envoyée
 
 <script>
 let monMarqueur = null;
+    let marqueursFamille = [];
     let gpsActif = false;
     let appareilId =
     localStorage.getItem(
@@ -276,6 +277,11 @@ function erreurPosition(erreur){
 }
 
 async function chargerPositions(){
+    marqueursFamille.forEach(
+    m => map.removeLayer(m)
+);
+
+marqueursFamille = [];
 
     try{
 
@@ -294,18 +300,22 @@ async function chargerPositions(){
                 item.longitude
             ){
 
-                L.marker([
-                    item.latitude,
-                    item.longitude
-                ])
-                .addTo(map)
-                .bindTooltip(
-                    item.nom || "Membre",
-                    {
-                        permanent:true,
-                        direction:'top'
-                     }
-              );
+                const marqueur = L.marker([
+    item.latitude,
+    item.longitude
+])
+.addTo(map)
+.bindTooltip(
+    item.nom || "Membre",
+    {
+        permanent:true,
+        direction:'top'
+    }
+);
+
+marqueursFamille.push(
+    marqueur
+);
             }
 
         });
