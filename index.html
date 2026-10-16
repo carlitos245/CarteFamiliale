@@ -223,13 +223,20 @@ async function afficherPosition(position){
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify({
-                    nom:document.getElementById(
-                    "nomMembre"
-                     ).value,
-                    latitude:latitude,
-                    longitude:longitude,
-                    date:new Date().toISOString()
-                })
+
+    id: appareilId,
+
+    nom:document.getElementById(
+        "nomMembre"
+    ).value,
+
+    latitude:latitude,
+
+    longitude:longitude,
+
+    date:new Date().toISOString()
+
+})
             }
         );
 
