@@ -146,24 +146,23 @@ async function demanderPosition(){
     }
 
     const resultat =
-        document.getElementById('gpsResult');
+    document.getElementById('gpsResult');
 
-    resultat.innerHTML =
-        "Recherche GPS...";
+resultat.innerHTML =
+    "Recherche GPS...";
 
-    navigator.geolocation.getCurrentPosition(
+navigator.geolocation.watchPosition(
 
-        afficherPosition,
+    afficherPosition,
 
-        erreurPosition,
+    erreurPosition,
 
-        {
-            enableHighAccuracy:true,
-            timeout:10000,
-            maximumAge:0
-        }
+    {
+        enableHighAccuracy:true,
+        maximumAge:0
+    }
 
-    );
+);
 }
 
 async function afficherPosition(position){
