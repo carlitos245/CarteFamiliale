@@ -15,21 +15,29 @@ app.get("/", (req, res) => {
 app.post("/position", (req, res) => {
 
     const nouvellePosition = {
+
+        id: req.body.id,
+
         nom: req.body.nom,
+
         latitude: req.body.latitude,
+
         longitude: req.body.longitude,
+
         date: new Date()
+
     };
 
     const index = positions.findIndex(
-        p => p.nom === nouvellePosition.nom
+        p => p.id === nouvellePosition.id
     );
 
-    if (index !== -1) {
+    if(index !== -1){
 
-        positions[index] = nouvellePosition;
+        positions[index] =
+            nouvellePosition;
 
-    } else {
+    }else{
 
         positions.push(
             nouvellePosition
@@ -38,7 +46,7 @@ app.post("/position", (req, res) => {
     }
 
     res.json({
-        success: true
+        success:true
     });
 
 });
