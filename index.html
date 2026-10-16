@@ -72,7 +72,31 @@ button:hover{
 </head>
 
 <body>
+<div id="loginPage">
 
+    <h2>🔒 Carte Familiale</h2>
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Mot de passe familial"
+        style="
+        width:100%;
+        padding:15px;
+        margin-bottom:10px;
+        font-size:18px;
+        "
+    >
+
+    <button id="login-btn">
+        Entrer
+    </button>
+
+    <p id="error" style="color:red;"></p>
+
+</div>
+
+<div id="appPage" style="display:none;">
 <header>
 
 <h2>📍 Carte Familiale</h2>
@@ -111,7 +135,32 @@ Position non envoyée
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-let monMarqueur = null;
+const PASSWORD8HASH = "91de9f668d70cd3e6771ecc7cdbdb96a93f8b427f9ef51de888363acf25ccab7";
+async function hash(text){
+
+    const msgUint8 =
+        new TextEncoder().encode(text);
+
+    const hashBuffer =
+        await crypto.subtle.digest(
+            "SHA-256",
+            msgUint8
+        );
+
+    const hashArray =
+        Array.from(
+            new Uint8Array(hashBuffer)
+        );
+
+    return hashArray
+        .map(
+            b => b.toString(16)
+            .padStart(2,"0")
+        )
+        .join("");
+}
+    
+    let monMarqueur = null;
     let marqueursFamille = [];
     let gpsActif = false;
     let appareilId =
@@ -334,7 +383,69 @@ chargerPositions();
     5000
 );
 
-</script>
+    document
+.getElementById("login-btn")
+.addEventListener(
 
+    "click",
+
+    async () => {
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value;
+
+        const hashed =
+            await hash(password);
+
+        if(
+            hashed ===
+            PASSWORD_HASH
+        ){
+
+            sessionStorage.setItem(
+                "auth",
+                "ok"
+            );
+
+            document.getElementById(
+                "loginPage"
+            ).style.display = "none";
+
+            document.getElementById(
+                "appPage"
+            ).style.display = "block";
+
+        }else{
+
+            document.getElementById(
+                "error"
+            ).textContent =
+            "Mot de passe incorrect";
+
+        }
+
+    }
+
+);
+    if(
+    sessionStorage.getItem(
+        "auth"
+    ) === "ok"
+){
+
+    document.getElementById(
+        "loginPage"
+    ).style.display = "none";
+
+    document.getElementById(
+        "appPage"
+    ).style.display = "block";
+
+}
+</script>
+    
+</div>
 </body>
 </html>
