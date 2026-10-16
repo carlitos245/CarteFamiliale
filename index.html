@@ -414,8 +414,12 @@ chargerPositions();
             ).style.display = "none";
 
             document.getElementById(
-                "appPage"
-            ).style.display = "block";
+    "appPage"
+).style.display = "block";
+
+setTimeout(() => {
+    map.invalidateSize();
+}, 200);
 
         }else{
 
@@ -429,23 +433,28 @@ chargerPositions();
     }
 
 );
-    if(
-    sessionStorage.getItem(
-        "auth"
-    ) === "ok"
-){
+    document.getElementById(
+    "appPage"
+).style.display = "block";
+
+setTimeout(() => {
+    map.invalidateSize();
+}, 200);
 
     document.getElementById(
         "loginPage"
     ).style.display = "none";
 
     document.getElementById(
-        "appPage"
-    ).style.display = "block";
+    "appPage"
+).style.display = "block";
+
+setTimeout(() => {
+    map.invalidateSize();
+}, 200);
 
 }
+        </div>
 </script>
-    
-</div>
 </body>
 </html>
