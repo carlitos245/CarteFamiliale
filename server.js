@@ -14,17 +14,33 @@ app.get("/", (req, res) => {
 
 app.post("/position", (req, res) => {
 
-    positions.push({
-        famille: req.body.famille,
+    const nouvellePosition = {
         nom: req.body.nom,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         date: new Date()
-    });
+    };
+
+    const index = positions.findIndex(
+        p => p.nom === nouvellePosition.nom
+    );
+
+    if (index !== -1) {
+
+        positions[index] = nouvellePosition;
+
+    } else {
+
+        positions.push(
+            nouvellePosition
+        );
+
+    }
 
     res.json({
         success: true
     });
+
 });
 
 app.get("/positions", (req, res) => {
