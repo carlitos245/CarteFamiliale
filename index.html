@@ -184,11 +184,14 @@ async function afficherPosition(position){
             longitude
         ]).addTo(map);
 
-    monMarqueur.bindPopup(
-    "📍 " +
+    monMarqueur.bindTooltip(
     document.getElementById(
         "nomMembre"
-    ).value
+    ).value,
+    {
+        permanent:true,
+        direction:'top'
+    }
 );
    
     map.setView(
@@ -271,9 +274,13 @@ async function chargerPositions(){
                     item.longitude
                 ])
                 .addTo(map)
-                .bindPopup(
-                    item.nom || "Membre"
-                );
+                .bindTooltip(
+                    item.nom || "Membre",
+                    {
+                        permanent:true,
+                        direction:'top'
+                     }
+              );
             }
 
         });
