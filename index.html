@@ -112,6 +112,7 @@ Position non envoyée
 
 <script>
 let monMarqueur = null;
+    let gpsActif = false;
     let appareilId =
     localStorage.getItem(
         "carteFamilialeId"
@@ -164,18 +165,23 @@ async function demanderPosition(){
 resultat.innerHTML =
     "Recherche GPS...";
 
-navigator.geolocation.watchPosition(
+if(!gpsActif){
 
-    afficherPosition,
+    gpsActif = true;
 
-    erreurPosition,
+    navigator.geolocation.watchPosition(
 
-    {
-        enableHighAccuracy:true,
-        maximumAge:0
-    }
+        afficherPosition,
 
-);
+        erreurPosition,
+
+        {
+            enableHighAccuracy:true,
+            maximumAge:0
+        }
+
+    );
+
 }
 
 async function afficherPosition(position){
