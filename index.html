@@ -283,10 +283,16 @@ async function afficherPosition(position){
     }
 );
    
+    if(!window.carteCentree){
+
     map.setView(
         [latitude,longitude],
         16
     );
+
+    window.carteCentree = true;
+
+}
 
     try{
 
