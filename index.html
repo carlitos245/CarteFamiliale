@@ -178,11 +178,21 @@ if(!appareilId){
         appareilId
     );
 }
+localStorage.setItem(
+    "nomMembre",
+    nom
+);    
 const map = L.map('map').setView(
     [48.8566,2.3522],
     12
 );
+if(nomSauvegarde){
 
+    document.getElementById(
+        "nomMembre"
+    ).value = nomSauvegarde;
+
+}
 L.tileLayer(
 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 {
@@ -195,7 +205,11 @@ async function demanderPosition(){
         document.getElementById(
             "nomMembre"
         ).value.trim();
-
+    
+localStorage.setItem(
+    "nomMembre",
+    nom
+);
     if(nom === ""){
 
         document.getElementById(
