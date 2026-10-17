@@ -193,6 +193,12 @@ if(nomSauvegarde){
         "nomMembre"
     ).value = nomSauvegarde;
 
+    setTimeout(() => {
+
+        demanderPosition();
+
+    }, 2000);
+
 }
 L.tileLayer(
 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
