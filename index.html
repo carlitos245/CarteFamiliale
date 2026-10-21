@@ -353,12 +353,7 @@ function erreurPosition(erreur){
 }
 
 async function chargerPositions(){
-    marqueursFamille.forEach(
-    m => map.removeLayer(m)
-);
-
-marqueursFamille = [];
-
+    
     try{
 
         const response =
@@ -416,22 +411,42 @@ if(secondes < 60){
         ) + " j";
 }
 
-const marqueur = L.marker([
-    item.latitude,
-    item.longitude
-])
-.addTo(map)
-.bindTooltip(
-    item.nom + " • depuis " + tempsTexte,
-    {
-        permanent:true,
-        direction:'top'
-    }
-);
+const cle =
+    item.id || item.nom;
 
-marqueursFamille.push(
-    marqueur
-);
+if(marqueursFamille[cle]){
+
+    marqueursFamille[cle]
+        .setLatLng([
+            item.latitude,
+            item.longitude
+        ]);
+
+    marqueursFamille[cle]
+        .setTooltipContent(
+            item.nom +
+            " • depuis " +
+            tempsTexte
+        );
+
+}else{
+
+    marqueursFamille[cle] =
+        L.marker([
+            item.latitude,
+            item.longitude
+        ])
+        .addTo(map)
+        .bindTooltip(
+            item.nom +
+            " • depuis " +
+            tempsTexte,
+            {
+                permanent:true,
+                direction:'top'
+            }
+        );
+}
             }
 
         });
