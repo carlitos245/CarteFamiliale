@@ -411,26 +411,6 @@ if(secondes <= 10){
         ) + " j";
 }
 
-    tempsTexte =
-        Math.floor(
-            secondes / 60
-        ) + " min";
-
-}else if(secondes < 86400){
-
-    tempsTexte =
-        Math.floor(
-            secondes / 3600
-        ) + " h";
-
-}else{
-
-    tempsTexte =
-        Math.floor(
-            secondes / 86400
-        ) + " j";
-}
-
 const cle =
     item.id || item.nom;
 
