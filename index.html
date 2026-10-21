@@ -376,13 +376,53 @@ marqueursFamille = [];
                 item.longitude
             ){
 
-                const marqueur = L.marker([
+                const datePosition =
+    new Date(item.date);
+
+const maintenant =
+    new Date();
+
+const secondes =
+    Math.floor(
+        (maintenant - datePosition) / 1000
+    );
+
+let tempsTexte = "";
+
+if(secondes < 60){
+
+    tempsTexte =
+        secondes + " s";
+
+}else if(secondes < 3600){
+
+    tempsTexte =
+        Math.floor(
+            secondes / 60
+        ) + " min";
+
+}else if(secondes < 86400){
+
+    tempsTexte =
+        Math.floor(
+            secondes / 3600
+        ) + " h";
+
+}else{
+
+    tempsTexte =
+        Math.floor(
+            secondes / 86400
+        ) + " j";
+}
+
+const marqueur = L.marker([
     item.latitude,
     item.longitude
 ])
 .addTo(map)
 .bindTooltip(
-    item.nom || "Membre",
+    item.nom + " • " + tempsTexte,
     {
         permanent:true,
         direction:'top'
