@@ -375,12 +375,41 @@ const secondes =
 
 let tempsTexte = "";
 
-if(secondes < 60){
+if(secondes <= 10){
 
     tempsTexte =
+        "en ligne";
+
+}else if(secondes < 60){
+
+    tempsTexte =
+        "depuis " +
         secondes + " s";
 
 }else if(secondes < 3600){
+
+    tempsTexte =
+        "depuis " +
+        Math.floor(
+            secondes / 60
+        ) + " min";
+
+}else if(secondes < 86400){
+
+    tempsTexte =
+        "depuis " +
+        Math.floor(
+            secondes / 3600
+        ) + " h";
+
+}else{
+
+    tempsTexte =
+        "depuis " +
+        Math.floor(
+            secondes / 86400
+        ) + " j";
+}
 
     tempsTexte =
         Math.floor(
